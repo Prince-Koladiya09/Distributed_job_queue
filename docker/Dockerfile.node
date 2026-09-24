@@ -1,0 +1,33 @@
+# Generic Dockerfile for any Node backend package in this monorepo
+# (server / worker / scheduler / reaper). The specific package to run
+# is chosen with the WORKSPACE and START_CMD build args, e.g.:
+#
+#   docker build -f docker/Dockerfile.node --build-arg WORKSPACE=packages/server -t jobqueue-server .
+#
+FROM node:20-alpine AS base
+WORKDIR /app
+
+# Install dependencies for the whole workspace (simpler + better layer
+# caching than per-package installs for a project this size).
+COPY package.json ./
+COPY packages/shared/package.json packages/shared/package.json
+COPY packages/server/package.json packages/server/package.json
+COPY packages/worker/package.json packages/worker/package.json
+COPY packages/scheduler/package.json packages/scheduler/package.json
+COPY packages/reaper/package.json packages/reaper/package.json
+RUN npm install --omit=dev --workspaces --if-present
+
+COPY packages/shared packages/shared
+COPY packages/server packages/server
+COPY packages/worker packages/worker
+COPY packages/scheduler packages/scheduler
+COPY packages/reaper packages/reaper
+COPY packages/db packages/db
+
+ARG WORKSPACE
+ENV WORKSPACE=${WORKSPACE}
+
+USER node
+EXPOSE 3000
+
+CMD ["sh", "-c", "node ${WORKSPACE}/src/index.js"]

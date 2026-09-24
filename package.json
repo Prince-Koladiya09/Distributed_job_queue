@@ -1,0 +1,31 @@
+{
+  "name": "distributed-job-queue",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Distributed Job Queue & Background Processing System (Node.js, Fastify, Redis, PostgreSQL, React, WebSocket)",
+  "workspaces": [
+    "packages/db",
+    "packages/shared",
+    "packages/server",
+    "packages/worker",
+    "packages/scheduler",
+    "packages/reaper",
+    "packages/dashboard"
+  ],
+  "scripts": {
+    "db:migrate": "node packages/db/migrate.js",
+    "dev:server": "npm run dev -w packages/server",
+    "dev:worker": "npm run dev -w packages/worker",
+    "dev:scheduler": "npm run dev -w packages/scheduler",
+    "dev:reaper": "npm run dev -w packages/reaper",
+    "dev:dashboard": "npm run dev -w packages/dashboard",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "devDependencies": {
+    "vitest": "^2.1.4"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

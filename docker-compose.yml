@@ -1,0 +1,130 @@
+version: "3.9"
+
+# SRS 10.1: Local environment — API, worker x2, Redis, Postgres, dashboard.
+services:
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: jobqueue
+      POSTGRES_PASSWORD: jobqueue
+      POSTGRES_DB: jobqueue
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U jobqueue"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  migrate:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.node
+      args:
+        WORKSPACE: packages/db
+    command: ["node", "packages/db/migrate.js"]
+    environment:
+      DATABASE_URL: postgres://jobqueue:jobqueue@postgres:5432/jobqueue
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  server:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.node
+      args:
+        WORKSPACE: packages/server
+    ports:
+      - "3000:3000"
+    environment:
+      PORT: 3000
+      REDIS_URL: redis://redis:6379
+      DATABASE_URL: postgres://jobqueue:jobqueue@postgres:5432/jobqueue
+      API_KEYS: dev-key-123,dev-key-456
+      RATE_LIMIT_PER_MIN: 600
+    depends_on:
+      redis:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+
+  worker:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.node
+      args:
+        WORKSPACE: packages/worker
+    deploy:
+      replicas: 2
+    environment:
+      REDIS_URL: redis://redis:6379
+      DATABASE_URL: postgres://jobqueue:jobqueue@postgres:5432/jobqueue
+      WORKER_CONCURRENCY: 4
+    depends_on:
+      redis:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+
+  scheduler:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.node
+      args:
+        WORKSPACE: packages/scheduler
+    environment:
+      REDIS_URL: redis://redis:6379
+      DATABASE_URL: postgres://jobqueue:jobqueue@postgres:5432/jobqueue
+    depends_on:
+      redis:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+
+  reaper:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.node
+      args:
+        WORKSPACE: packages/reaper
+    environment:
+      REDIS_URL: redis://redis:6379
+      DATABASE_URL: postgres://jobqueue:jobqueue@postgres:5432/jobqueue
+    depends_on:
+      redis:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+
+  dashboard:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.dashboard
+    ports:
+      - "8080:80"
+    depends_on:
+      - server
+
+volumes:
+  pgdata:

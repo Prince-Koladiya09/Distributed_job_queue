@@ -1,0 +1,251 @@
+:root {
+  --bg: #11141b;
+  --panel: #1c2029;
+  --border: #2a2f3a;
+  --text: #e7eaf1;
+  --muted: #8b93a7;
+  --accent: #5b8cff;
+  --danger: #ff5b6e;
+  --ok: #3ddc84;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.app-shell {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 16px 24px 48px;
+}
+
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+}
+
+.app-header h1 {
+  font-size: 20px;
+  margin: 0;
+}
+
+.conn-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+.dot--live { background: var(--ok); }
+.dot--down { background: var(--danger); }
+
+.tabs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 8px;
+  margin-bottom: 16px;
+}
+
+.tab {
+  background: transparent;
+  border: none;
+  color: var(--muted);
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.tab--active {
+  background: var(--panel);
+  color: var(--text);
+}
+
+.api-key-field {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.api-key-field input {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 4px 8px;
+  border-radius: 4px;
+  width: 140px;
+}
+
+.grid-2col {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 16px;
+  align-items: start;
+}
+
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.panel--narrow { max-width: 520px; }
+
+.panel h2 { margin-top: 0; font-size: 15px; }
+.panel h3 { font-size: 13px; color: var(--muted); margin-bottom: 6px; }
+
+.panel-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.stat-card {
+  background: #171b23;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px;
+  text-align: center;
+}
+
+.stat-card--danger { border-color: var(--danger); }
+
+.stat-value { font-size: 20px; font-weight: 600; }
+.stat-label { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+.muted { color: var(--muted); font-size: 13px; }
+.error { color: var(--danger); font-size: 13px; margin: 8px 0; }
+.error-text { color: var(--danger); }
+.success { color: var(--ok); font-size: 13px; margin-top: 8px; }
+
+.job-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.job-table th { text-align: left; color: var(--muted); font-weight: 500; padding: 6px 8px; border-bottom: 1px solid var(--border); }
+.job-table td { padding: 8px; border-bottom: 1px solid var(--border); }
+.job-row { cursor: pointer; }
+.job-row:hover { background: #232833; }
+
+.badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-size: 11px;
+  background: #2a2f3a;
+}
+.badge--high { background: #43263a; color: #ff9ec6; }
+.badge--normal { background: #233648; color: #7fb8ff; }
+.badge--low { background: #263524; color: #9fdc8f; }
+.badge--status-queued { background: #233648; color: #7fb8ff; }
+.badge--status-delayed { background: #453a20; color: #ffcf7f; }
+.badge--status-active { background: #2a2f3a; color: #e7eaf1; }
+.badge--status-completed { background: #1f3a29; color: #3ddc84; }
+.badge--status-failed { background: #452323; color: #ff9e9e; }
+.badge--status-dead { background: #451414; color: #ff5b6e; }
+
+.pager {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 10px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+button {
+  background: var(--accent);
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+}
+button:disabled { opacity: 0.5; cursor: not-allowed; }
+button.danger { background: var(--danger); }
+
+.filters { display: flex; gap: 8px; margin-bottom: 10px; }
+.filters select, .filters input {
+  background: #171b23;
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 6px 8px;
+  border-radius: 6px;
+  font-size: 13px;
+}
+
+.drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 420px;
+  max-width: 90vw;
+  height: 100vh;
+  background: var(--panel);
+  border-left: 1px solid var(--border);
+  padding: 20px;
+  overflow-y: auto;
+  box-shadow: -8px 0 24px rgba(0,0,0,0.4);
+}
+
+.drawer-header { display: flex; justify-content: space-between; align-items: center; }
+.close-btn { background: transparent; font-size: 20px; padding: 0 8px; }
+
+.detail-list { display: grid; grid-template-columns: 90px 1fr; gap: 6px 10px; font-size: 13px; }
+.detail-list dt { color: var(--muted); }
+.detail-list dd { margin: 0; }
+
+.mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; }
+.truncate-id { max-width: 80px; overflow: hidden; text-overflow: ellipsis; }
+.truncate { max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.code-block {
+  background: #0e1117;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 10px;
+  font-size: 12px;
+  overflow-x: auto;
+}
+
+.event-list, .event-feed { list-style: none; padding: 0; margin: 0; font-size: 12px; max-height: 260px; overflow-y: auto; }
+.event-list li, .event-feed li { padding: 5px 0; border-bottom: 1px solid var(--border); cursor: default; }
+.event-feed li { cursor: pointer; }
+.event-feed li:hover { background: #232833; }
+
+.actions { display: flex; gap: 8px; margin-top: 16px; }
+
+.job-form { display: flex; flex-direction: column; gap: 12px; }
+.job-form label { display: flex; flex-direction: column; gap: 4px; font-size: 13px; color: var(--muted); }
+.job-form input, .job-form textarea, .job-form select {
+  background: #171b23;
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 8px;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 13px;
+}
+.form-row { display: flex; gap: 12px; }
+.form-row label { flex: 1; }
