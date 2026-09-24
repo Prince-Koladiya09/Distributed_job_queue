@@ -253,7 +253,7 @@ sequenceDiagram
         W->>PG: Final status updates
         W-->>OS: exit 0 ("All in-flight jobs finished cleanly.")
     else grace period exceeded
-        W-->>OS: exit; unfinished jobs stay in processing list for the reaper
+        W-->>OS: exit, unfinished jobs stay in processing list for the reaper
     end
 ```
 
